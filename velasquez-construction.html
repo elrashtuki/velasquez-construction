@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velasquez Construction</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --blue: #1a3a5c;
+    --red: #c0392b;
+    --white: #f5f5f0;
+    --gray: #8a9bb0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(13, 27, 42, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(192, 57, 43, 0.3);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  nav a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-left: 2.5rem;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 70% 50%, rgba(26, 58, 92, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 30% 80%, rgba(192, 57, 43, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 3rem 4rem 5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 7vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 span { color: var(--red); display: block; }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--gray);
+    line-height: 1.7;
+    max-width: 400px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: white;
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+
+  .btn-primary:hover {
+    background: #e74c3c;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Hero right - graphic */
+  .hero-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: fadeIn 1s ease 0.3s both;
+  }
+
+  .hero-graphic {
+    position: relative;
+    width: 380px;
+    height: 380px;
+  }
+
+  .hex-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .big-circle {
+    width: 320px;
+    height: 320px;
+    border: 1px solid rgba(192, 57, 43, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: rotate 20s linear infinite;
+  }
+
+  .big-circle::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(26, 58, 92, 0.6);
+    border-radius: 50%;
+  }
+
+  .inner-icon {
+    font-size: 5rem;
+    animation: counterRotate 20s linear infinite;
+  }
+
+  .float-badge {
+    position: absolute;
+    background: var(--blue);
+    border: 1px solid rgba(192, 57, 43, 0.4);
+    padding: 0.8rem 1.2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .badge-1 { top: 20px; right: 0; animation-delay: 0s; }
+  .badge-2 { bottom: 60px; left: 0; animation-delay: 1.5s; }
+  .badge-3 { top: 50%; right: -20px; animation-delay: 0.8s; }
+
+  .badge-label { color: var(--red); font-size: 0.65rem; display: block; }
+
+  /* STATS */
+  .stats {
+    background: var(--blue);
+    padding: 3rem 5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    border-top: 1px solid rgba(192, 57, 43, 0.3);
+    border-bottom: 1px solid rgba(192, 57, 43, 0.3);
+  }
+
+  .stat {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* SERVICES */
+  .services {
+    padding: 6rem 5rem;
+  }
+
+  .section-header {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(192, 57, 43, 0.15);
+  }
+
+  .service-card {
+    background: var(--navy);
+    padding: 2.5rem 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.3s;
+  }
+
+  .service-card:hover::before { width: 100%; }
+  .service-card:hover { background: rgba(26, 58, 92, 0.5); }
+
+  .service-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .service-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+
+  .service-desc {
+    font-size: 0.85rem;
+    color: var(--gray);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* WHY US */
+  .why {
+    padding: 6rem 5rem;
+    background: var(--blue);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .why-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .why-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.2rem;
+    border-left: 2px solid var(--red);
+    background: rgba(13, 27, 42, 0.4);
+  }
+
+  .why-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+  .why-text h4 {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .why-text p {
+    font-size: 0.82rem;
+    color: var(--gray);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .why-right {
+    position: relative;
+  }
+
+  .big-quote {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.08);
+    position: absolute;
+    top: -1rem;
+    left: -1rem;
+    font-size: 8rem;
+  }
+
+  .testimonial-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    font-weight: 300;
+    color: var(--white);
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonial-author {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 6rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--blue);
+    border-left: 2px solid var(--red);
+  }
+
+  .contact-icon { font-size: 1.3rem; }
+
+  .contact-label {
+    font-size: 0.7rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .contact-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .contact-value a {
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .free-estimate {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--red);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+
+  .free-estimate h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+
+  .free-estimate p {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 300;
+  }
+
+  .free-estimate a {
+    display: inline-block;
+    margin-top: 1rem;
+    background: white;
+    color: var(--red);
+    padding: 0.7rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  /* FOOTER */
+  footer {
+    background: rgba(0,0,0,0.4);
+    padding: 2rem 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(192, 57, 43, 0.2);
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    color: var(--white);
+  }
+
+  .footer-logo span { color: var(--red); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes counterRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    nav a { margin-left: 1rem; font-size: 0.75rem; }
+    .hero { grid-template-columns: 1fr; min-height: auto; padding: 6rem 1.5rem 3rem; }
+    .hero-left { padding: 2rem 0; }
+    .hero-right { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); padding: 2rem 1.5rem; }
+    .services { padding: 4rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .why { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2rem; }
+    .contact { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; padding: 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VELASQUEZ <span>CONSTRUCTION</span></div>
+  <div>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Licensed & Insured · Memphis, TN</div>
+    <h1>BUILT TO <span>LAST.</span></h1>
+    <p class="hero-sub">Residential & commercial construction, renovation, and repair services. Interior & exterior — carpentry, painting, sheetrock, fences, pressure washing and more.</p>
+    <div class="hero-ctas">
+      <a href="tel:9013140652" class="btn-primary">📞 Call Now</a>
+      <a href="#services" class="btn-secondary">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-graphic">
+      <div class="hex-bg">
+        <div class="big-circle">
+          <div class="inner-icon">🏗️</div>
+        </div>
+      </div>
+      <div class="float-badge badge-1">
+        <span class="badge-label">Licensed</span>
+        & Insured
+      </div>
+      <div class="float-badge badge-2">
+        <span class="badge-label">Service</span>
+        Free Estimates
+      </div>
+      <div class="float-badge badge-3">
+        <span class="badge-label">Coverage</span>
+        Res. & Comm.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Licensed & Insured</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">2-IN-1</div>
+    <div class="stat-label">Residential & Commercial</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">FREE</div>
+    <div class="stat-label">Estimates Always</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">901</div>
+    <div class="stat-label">Memphis Local</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header">
+    <div class="section-tag">What We Do</div>
+    <h2 class="section-title">OUR SERVICES</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🔨</div>
+      <div class="service-name">Carpentry</div>
+      <p class="service-desc">Custom woodwork, framing, and structural carpentry for residential and commercial projects of any size.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎨</div>
+      <div class="service-name">Painting</div>
+      <p class="service-desc">Interior and exterior painting with premium finishes. Clean, precise, and lasting results every time.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🧱</div>
+      <div class="service-name">Sheetrock</div>
+      <p class="service-desc">Installation, repair, and finishing of drywall and sheetrock for walls and ceilings.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌿</div>
+      <div class="service-name">Fences</div>
+      <p class="service-desc">New fence installation and repair. Wood, vinyl, and chain-link options for any property.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💧</div>
+      <div class="service-name">Pressure Washing</div>
+      <p class="service-desc">Deep cleaning for driveways, siding, decks, and exterior surfaces to restore curb appeal.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏠</div>
+      <div class="service-name">General Construction</div>
+      <p class="service-desc">Full-service residential and commercial construction and renovation. No job too big or too small.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why" id="about">
+  <div>
+    <div class="section-tag">Why Choose Us</div>
+    <h2 class="section-title">ANTONIO VELASQUEZ</h2>
+    <ul class="why-list">
+      <li class="why-item">
+        <div class="why-icon">✅</div>
+        <div class="why-text">
+          <h4>Licensed & Insured</h4>
+          <p>Full licensing and insurance coverage for your complete peace of mind on every project.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon">🏗️</div>
+        <div class="why-text">
+          <h4>Interior & Exterior</h4>
+          <p>We handle everything inside and out — one contractor, no headaches, full accountability.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon">💰</div>
+        <div class="why-text">
+          <h4>Free Estimates</h4>
+          <p>No commitment required. Get a transparent, detailed estimate before any work begins.</p>
+        </div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon">📍</div>
+        <div class="why-text">
+          <h4>Local Memphis Contractor</h4>
+          <p>Proudly serving the Memphis community. We know the area and we care about our neighbors.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="why-right">
+    <div class="big-quote">"</div>
+    <p class="testimonial-text">"We take pride in every nail, every coat of paint, every fence post. When we leave your property, it looks better than the day we arrived — that's our promise."</p>
+    <div class="testimonial-author">— Antonio Velasquez, Owner</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div>
+    <div class="section-tag">Get In Touch</div>
+    <h2 class="section-title">CONTACT US</h2>
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <span class="contact-label">Phone</span>
+          <div class="contact-value"><a href="tel:9013140652">(901) 314-0652</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <span class="contact-label">Email</span>
+          <div class="contact-value"><a href="mailto:velasquezconstruction0652@gmail.com">velasquezconstruction0652@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📘</div>
+        <div>
+          <span class="contact-label">Facebook</span>
+          <div class="contact-value"><a href="#">Velasquez Constructions</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <span class="contact-label">Service Area</span>
+          <div class="contact-value">Memphis, TN & Surrounding Areas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="free-estimate">
+      <h3>FREE ESTIMATE</h3>
+      <p>Ready to start your project? Call or email us today and we'll get back to you with a no-obligation estimate within 24 hours.</p>
+      <a href="tel:9013140652">Call (901) 314-0652</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VELASQUEZ <span>CONSTRUCTION</span></div>
+  <div>Licensed & Insured · Residential & Commercial · Memphis, TN</div>
+  <div>© 2025 Velasquez Construction</div>
+</footer>
+
+</body>
+</html>
