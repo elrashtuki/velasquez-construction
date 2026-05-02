@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velasquez Construction</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f4f4f4;
+    --surface2: #e8e8e8;
+    --dark: #1a2f5e;
+    --red: #c0392b;
+    --red2: #e74c3c;
+    --text: #1a2f5e;
+    --muted: #6b7c93;
+    --border: #e0e0e0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Barlow',sans-serif; overflow-x:hidden; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:1rem 5rem; background:rgba(255,255,255,0.97); backdrop-filter:blur(12px); border-bottom:2px solid var(--dark); box-shadow:0 2px 20px rgba(0,0,0,0.07); }
+  .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:3px; color:var(--dark); }
+  .nav-logo span { color:var(--red); }
+  .nav-links { display:flex; align-items:center; gap:2rem; }
+  nav a { color:var(--muted); text-decoration:none; font-size:0.78rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:color 0.2s; position:relative; }
+  nav a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--red); transition:width 0.25s; }
+  nav a:hover { color:var(--red); }
+  nav a:hover::after, nav a.active-link::after { width:100%; }
+  nav a.active-link { color:var(--red); }
+  .lang-toggle { display:flex; gap:0.3rem; }
+  .lang-btn { background:transparent; border:1.5px solid var(--border); color:var(--muted); padding:0.3rem 0.65rem; font-size:0.72rem; font-weight:700; letter-spacing:1px; cursor:pointer; transition:all 0.2s; font-family:'Barlow',sans-serif; border-radius:2px; }
+  .lang-btn.active { background:var(--red); border-color:var(--red); color:white; }
+  .lang-btn:hover:not(.active) { border-color:var(--dark); color:var(--dark); }
+
+  /* HERO */
+  .hero { min-height:100vh; display:flex; align-items:center; padding-top:72px; position:relative; overflow:hidden; background:#fff; }
+  .hero::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(rgba(26,47,94,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,47,94,0.08) 1px, transparent 1px),
+      radial-gradient(ellipse at 85% 50%, rgba(192,57,43,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(26,47,94,0.07) 0%, transparent 50%);
+    background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+  }
+  .hero-inner { position:relative; z-index:1; padding:4rem 5rem; max-width:900px; animation:fadeUp 0.8s ease both; }
+  .hero-tag { font-size:0.72rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--red); margin-bottom:1.2rem; display:flex; align-items:center; gap:0.8rem; }
+  .hero-tag::before { content:''; display:block; width:28px; height:2px; background:var(--red); }
+  h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,7vw,7.5rem); line-height:0.92; letter-spacing:2px; margin-bottom:1.2rem; color:var(--dark); }
+  h1 span { color:var(--red); display:block; }
+  .hero-sub { font-size:1.05rem; color:var(--muted); line-height:1.7; max-width:520px; margin-bottom:2rem; }
+  .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+  .btn-primary { background:var(--red); color:white; padding:0.9rem 2rem; text-decoration:none; font-size:0.82rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; transition:all 0.2s; display:inline-flex; align-items:center; gap:0.5rem; clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); }
+  .btn-primary:hover { background:var(--red2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(192,57,43,0.35); }
+  .btn-outline-dark { border:2px solid var(--dark); background:var(--dark); color:white; padding:0.9rem 2rem; text-decoration:none; font-size:0.82rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; transition:all 0.2s; display:inline-flex; align-items:center; gap:0.5rem; }
+  .btn-outline-dark:hover { background:#0f1e3d; border-color:#0f1e3d; }
+  .trust-badges { display:flex; gap:1.5rem; flex-wrap:wrap; padding-top:1.5rem; border-top:1px solid var(--border); }
+  .trust-badge { display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; font-weight:600; color:var(--muted); }
+  .trust-badge .tb-dot { width:6px; height:6px; border-radius:50%; background:var(--red); }
+
+  /* STATS */
+  .stats { background:var(--dark); padding:2rem 5rem; display:grid; grid-template-columns:repeat(4,1fr); }
+  .stat { text-align:center; padding:1.5rem 1rem; border-right:1px solid rgba(255,255,255,0.1); }
+  .stat:last-child { border-right:none; }
+  .stat-num { font-family:'Bebas Neue',sans-serif; font-size:3rem; color:var(--red); line-height:1; }
+  .stat-label { font-size:0.7rem; color:rgba(255,255,255,0.45); letter-spacing:2px; text-transform:uppercase; margin-top:0.3rem; }
+
+  /* SERVICES */
+  .services { padding:6rem 5rem; background:var(--bg); }
+  .section-header { margin-bottom:3rem; display:flex; justify-content:space-between; align-items:flex-end; }
+  .section-tag { font-size:0.7rem; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--red); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.8rem; }
+  .section-tag::before { content:''; display:block; width:20px; height:2px; background:var(--red); }
+  .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,4vw,4rem); letter-spacing:2px; line-height:1; color:var(--dark); }
+  .btn-get-quote { background:var(--red); color:white; padding:0.75rem 1.5rem; text-decoration:none; font-size:0.78rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; transition:all 0.2s; white-space:nowrap; }
+  .btn-get-quote:hover { background:var(--red2); }
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+  .service-card { background:var(--bg); padding:2.5rem 2rem; transition:all 0.3s; position:relative; cursor:default; border-bottom:3px solid transparent; }
+  .service-card:hover { background:var(--surface); border-bottom-color:var(--red); transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,0.08); }
+  .service-num { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; color:rgba(26,47,94,0.06); line-height:1; margin-bottom:0.8rem; }
+  .service-icon-wrap { color:var(--red); margin-bottom:1rem; display:flex; }
+  .service-icon-wrap svg { stroke:var(--red); }
+  .service-name { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:1px; margin-bottom:0.5rem; color:var(--dark); }
+  .service-desc { font-size:0.85rem; color:var(--muted); line-height:1.6; }
+
+  /* BEFORE AFTER */
+  .before-after-section { padding:6rem 5rem; background:var(--surface); }
+  .ba-center { display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .ba-container { position:relative; width:100%; max-width:800px; margin:2.5rem auto 0; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.12); cursor:col-resize; user-select:none; }
+  .ba-img-after { width:100%; height:400px; background:linear-gradient(135deg,#e8f4f8,#bcd8ed); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; }
+  .ba-before-wrap { position:absolute; top:0; left:0; height:100%; overflow:hidden; }
+  .ba-img-before { width:800px; height:400px; background:linear-gradient(135deg,#f0e8d8,#c8b898); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; }
+  .ba-handle { position:absolute; top:0; bottom:0; width:3px; background:white; cursor:col-resize; display:flex; align-items:center; justify-content:center; }
+  .ba-handle::before { content:''; position:absolute; width:44px; height:44px; background:white; border-radius:50%; box-shadow:0 2px 12px rgba(0,0,0,0.25); }
+  .ba-handle::after { content:'◀ ▶'; position:absolute; font-size:0.6rem; color:var(--dark); font-weight:800; }
+  .ba-label { position:absolute; top:16px; padding:5px 12px; background:rgba(0,0,0,0.6); color:white; font-size:0.7rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+  .ba-label-before { left:16px; border-left:3px solid var(--red); }
+  .ba-label-after { right:16px; border-left:3px solid #27ae60; }
+  .ba-placeholder-text { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:3px; color:var(--dark); opacity:0.25; }
+
+  /* SERVICE AREA */
+  .area-section { padding:6rem 5rem; background:var(--dark); }
+  .area-section .section-tag { color:var(--red); }
+  .area-section .section-tag::before { background:var(--red); }
+  .area-section .section-title { color:white; }
+  .area-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(255,255,255,0.08); margin-top:2.5rem; }
+  .area-card { background:rgba(255,255,255,0.03); padding:1.8rem 2rem; transition:background 0.2s; }
+  .area-card:hover { background:rgba(255,255,255,0.08); }
+  .area-city { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px; margin-bottom:0.3rem; color:white; }
+  .area-state { font-size:0.7rem; color:rgba(255,255,255,0.35); letter-spacing:2px; text-transform:uppercase; }
+  .area-primary { color:var(--red) !important; }
+  .area-note { text-align:center; margin-top:2rem; color:rgba(255,255,255,0.35); font-size:0.85rem; }
+
+  /* REVIEWS */
+  .reviews { padding:6rem 5rem; background:var(--bg); }
+  .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2.5rem; }
+  .review-card { background:var(--surface); padding:2rem; border-top:3px solid var(--red); transition:all 0.3s; }
+  .review-card:hover { box-shadow:0 8px 30px rgba(0,0,0,0.08); transform:translateY(-2px); background:white; }
+  .review-stars { color:#f39c12; font-size:1rem; margin-bottom:1rem; letter-spacing:2px; }
+  .review-text { font-size:0.88rem; color:var(--muted); line-height:1.7; font-style:italic; margin-bottom:1rem; }
+  .review-author { font-weight:700; font-size:0.8rem; color:var(--dark); letter-spacing:1px; }
+  .review-cta { text-align:center; margin-top:2.5rem; }
+  .btn-outline-red { border:2px solid var(--red); color:var(--red); padding:0.8rem 2rem; text-decoration:none; font-size:0.8rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; transition:all 0.2s; display:inline-flex; align-items:center; gap:0.5rem; }
+  .btn-outline-red:hover { background:var(--red); color:white; }
+
+  /* ESTIMATE */
+  .estimate-section { padding:6rem 5rem; background:var(--surface); }
+  .estimate-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; margin-top:2.5rem; align-items:start; }
+  .estimate-info p { font-size:1rem; color:var(--muted); line-height:1.8; margin-bottom:1.5rem; }
+  .estimate-feature { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem; font-size:0.85rem; color:var(--muted); }
+  .estimate-feature .ef-dot { width:6px; height:6px; border-radius:50%; background:var(--red); flex-shrink:0; }
+  .estimate-form { display:flex; flex-direction:column; gap:1rem; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .form-group { display:flex; flex-direction:column; gap:0.4rem; }
+  .form-group label { font-size:0.68rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .form-group input, .form-group select, .form-group textarea { background:white; border:1.5px solid var(--border); color:var(--dark); padding:0.85rem 1rem; font-family:'Barlow',sans-serif; font-size:0.9rem; outline:none; transition:border 0.2s; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--red); }
+  .form-group textarea { resize:vertical; min-height:100px; }
+  .btn-submit { background:var(--red); color:white; border:none; padding:1rem; font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:3px; cursor:pointer; transition:all 0.2s; width:100%; }
+  .btn-submit:hover { background:var(--red2); }
+  .form-success { display:none; background:rgba(39,174,96,0.1); border:1px solid #27ae60; color:#27ae60; padding:1rem; text-align:center; font-weight:600; margin-top:0.5rem; }
+
+  /* WHY US */
+  .why { padding:6rem 5rem; background:var(--bg); display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
+  .why-list { list-style:none; display:flex; flex-direction:column; gap:1rem; margin-top:2rem; }
+  .why-item { display:flex; gap:1rem; align-items:flex-start; padding:1.2rem; border-left:3px solid var(--red); background:var(--surface); }
+  .why-icon { flex-shrink:0; display:flex; align-items:center; }
+  .why-text h4 { font-weight:700; margin-bottom:0.3rem; font-size:0.9rem; color:var(--dark); }
+  .why-text p { font-size:0.82rem; color:var(--muted); line-height:1.5; }
+  .why-right { position:relative; padding:2rem; background:var(--surface); border-left:4px solid var(--red); }
+  .big-quote { font-family:'Bebas Neue',sans-serif; font-size:8rem; line-height:1; color:rgba(26,47,94,0.05); position:absolute; top:-1rem; left:-1rem; }
+  .testimonial-text { font-size:1.1rem; line-height:1.8; color:var(--dark); font-style:italic; position:relative; z-index:1; }
+  .testimonial-author { margin-top:1.5rem; font-size:0.78rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red); }
+
+  /* CONTACT */
+  .contact { padding:6rem 5rem; background:var(--surface); display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+  .contact-info { display:flex; flex-direction:column; gap:1rem; margin-top:2rem; }
+  .contact-item { display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem; background:white; border-left:3px solid var(--red); }
+  .contact-icon { display:flex; align-items:center; justify-content:center; width:36px; flex-shrink:0; }
+  .contact-label { font-size:0.68rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; display:block; }
+  .contact-value { font-size:0.92rem; font-weight:600; color:var(--dark); }
+  .contact-value a { color:var(--dark); text-decoration:none; transition:color 0.2s; }
+  .contact-value a:hover { color:var(--red); }
+  .cta-box { margin-top:1.5rem; padding:2rem; background:var(--red); clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px)); }
+  .cta-box h3 { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:2px; margin-bottom:0.4rem; color:white; }
+  .cta-box p { font-size:0.85rem; opacity:0.85; margin-bottom:1rem; color:white; }
+  .cta-box a { color:white; font-size:1.2rem; font-weight:700; text-decoration:none; display:block; }
+
+  /* FOOTER */
+  footer { background:var(--dark); padding:2rem 5rem; display:flex; justify-content:space-between; align-items:center; border-top:3px solid var(--red); font-size:0.78rem; color:rgba(255,255,255,0.4); }
+  .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; letter-spacing:3px; color:white; }
+  .footer-logo span { color:var(--red); }
+  .footer-links { display:flex; gap:1.5rem; flex-wrap:wrap; }
+  .footer-links a { color:rgba(255,255,255,0.4); text-decoration:none; font-size:0.78rem; transition:color 0.2s; }
+  .footer-links a:hover { color:white; }
+
+  /* FLOATING */
+  .back-top { position:fixed; bottom:170px; right:24px; z-index:300; background:var(--dark); color:white; width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; border:none; box-shadow:0 2px 12px rgba(0,0,0,0.2); opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.3s; transform:translateY(10px); }
+  .back-top.show { opacity:1; pointer-events:all; transform:translateY(0); }
+  .back-top:hover { background:var(--red); }
+  .floating-call { position:fixed; bottom:100px; right:24px; z-index:300; background:var(--red); color:white; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; box-shadow:0 4px 20px rgba(192,57,43,0.5); animation:pulse 2s infinite; }
+  .floating-call:hover { background:var(--red2); transform:scale(1.1); }
+  .floating-wa { position:fixed; bottom:28px; right:24px; z-index:300; background:#25d366; color:white; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; text-decoration:none; box-shadow:0 4px 20px rgba(37,211,102,0.4); animation:pulse-green 2s infinite 0.5s; }
+  .floating-wa:hover { background:#20ba5a; transform:scale(1.1); }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.75s ease, transform 0.75s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-left { opacity:0; transform:translateX(-50px); transition:opacity 0.75s ease, transform 0.75s ease; }
+  .reveal-left.visible { opacity:1; transform:translateX(0); }
+  .reveal-right { opacity:0; transform:translateX(50px); transition:opacity 0.75s ease, transform 0.75s ease; }
+  .reveal-right.visible { opacity:1; transform:translateX(0); }
+  .reveal-delay-1 { transition-delay:0.1s; }
+  .reveal-delay-2 { transition-delay:0.2s; }
+  .reveal-delay-3 { transition-delay:0.3s; }
+  .reveal-delay-4 { transition-delay:0.4s; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes pulse { 0%,100%{box-shadow:0 4px 20px rgba(192,57,43,0.5)} 50%{box-shadow:0 4px 30px rgba(192,57,43,0.8)} }
+  @keyframes pulse-green { 0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4)} 50%{box-shadow:0 4px 30px rgba(37,211,102,0.7)} }
+
+  @media(max-width:900px){
+    nav{padding:1rem 1.5rem} .nav-links{gap:1rem} nav a{font-size:0.7rem}
+    .hero-inner{padding:3rem 1.5rem}
+    .stats{grid-template-columns:repeat(2,1fr);padding:2rem 1.5rem}
+    .services,.before-after-section,.area-section,.reviews,.estimate-section,.why,.contact{padding:3.5rem 1.5rem}
+    .section-header{flex-direction:column;align-items:flex-start;gap:1rem}
+    .services-grid,.reviews-grid{grid-template-columns:1fr}
+    .area-grid{grid-template-columns:repeat(2,1fr)}
+    .estimate-grid,.why,.contact{grid-template-columns:1fr;gap:2rem}
+    .form-row{grid-template-columns:1fr}
+    footer{flex-direction:column;gap:1rem;padding:1.5rem;text-align:center}
+    .footer-links{flex-wrap:wrap;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">VELASQUEZ <span>CONSTRUCTION</span></div>
+  <div class="nav-links">
+    <a href="#services" data-en="Services" data-es="Servicios">Services</a>
+    <a href="#reviews" data-en="Reviews" data-es="Reseñas">Reviews</a>
+    <a href="#estimate" data-en="Free Estimate" data-es="Estimado Gratis">Free Estimate</a>
+    <a href="#contact" data-en="Contact" data-es="Contacto">Contact</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag" data-en="Licensed & Insured · Memphis, TN" data-es="Licenciado y Asegurado · Memphis, TN">Licensed & Insured · Memphis, TN</div>
+    <h1 data-en="QUALITY YOU CAN <span>COUNT ON.</span>" data-es="CALIDAD EN LA QUE <span>PUEDE CONFIAR.</span>">QUALITY YOU CAN <span>COUNT ON.</span></h1>
+    <p class="hero-sub" data-en="Residential & commercial construction, renovation, and repair services. Interior & exterior — carpentry, painting, sheetrock, fences, pressure washing and more." data-es="Servicios de construcción, renovación y reparación residencial y comercial. Interior y exterior — carpintería, pintura, sheetrock, cercas, lavado a presión y más.">Residential & commercial construction, renovation, and repair services. Interior & exterior — carpentry, painting, sheetrock, fences, pressure washing and more.</p>
+    <div class="hero-ctas">
+      <a href="tel:9013140652" class="btn-primary" data-en="Call Now" data-es="Llámanos">Call Now</a>
+      <a href="#estimate" class="btn-outline-dark" data-en="Free Estimate" data-es="Estimado Gratis">Free Estimate</a>
+    </div>
+    <div class="trust-badges">
+      <div class="trust-badge"><div class="tb-dot"></div><span data-en="Licensed & Insured" data-es="Licenciado y Asegurado">Licensed & Insured</span></div>
+      <div class="trust-badge"><div class="tb-dot"></div><span data-en="5-Star Rated" data-es="5 Estrellas">5-Star Rated</span></div>
+      <div class="trust-badge"><div class="tb-dot"></div><span data-en="Free Estimates" data-es="Estimados Gratis">Free Estimates</span></div>
+      <div class="trust-badge"><div class="tb-dot"></div><span>Memphis, TN</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-en="Licensed & Insured" data-es="Licenciado y Asegurado">Licensed & Insured</div></div>
+  <div class="stat"><div class="stat-num">2-IN-1</div><div class="stat-label" data-en="Res. & Commercial" data-es="Res. y Comercial">Res. & Commercial</div></div>
+  <div class="stat"><div class="stat-num">FREE</div><div class="stat-label" data-en="Estimates Always" data-es="Estimados Siempre">Estimates Always</div></div>
+  <div class="stat"><div class="stat-num">901</div><div class="stat-label" data-en="Memphis Local" data-es="Local de Memphis">Memphis Local</div></div>
+</div>
+
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag" data-en="What We Do" data-es="Lo Que Hacemos">What We Do</div>
+      <h2 class="section-title" data-en="OUR SERVICES" data-es="NUESTROS SERVICIOS">OUR SERVICES</h2>
+    </div>
+    <a href="#estimate" class="btn-get-quote" data-en="GET A QUOTE" data-es="OBTENER COTIZACIÓN">GET A QUOTE</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">01</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18"/><circle cx="19" cy="7" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="17" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+      <div class="service-name" data-en="Carpentry" data-es="Carpintería">Carpentry</div>
+      <p class="service-desc" data-en="Custom woodwork, framing, and structural carpentry for any size project." data-es="Trabajos de madera y carpintería estructural para proyectos de cualquier tamaño.">Custom woodwork, framing, and structural carpentry for any size project.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">02</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="16" height="8" rx="2"/><path d="M10 12v4"/><rect x="8" y="16" width="4" height="5" rx="1"/></svg></div>
+      <div class="service-name" data-en="Painting" data-es="Pintura">Painting</div>
+      <p class="service-desc" data-en="Interior and exterior painting with premium finishes and lasting results." data-es="Pintura interior y exterior con acabados de primera y resultados duraderos.">Interior and exterior painting with premium finishes and lasting results.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">03</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="1"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div>
+      <div class="service-name" data-en="Sheetrock" data-es="Sheetrock">Sheetrock</div>
+      <p class="service-desc" data-en="Installation, repair, and finishing of drywall for walls and ceilings." data-es="Instalación, reparación y acabado de drywall para paredes y techos.">Installation, repair, and finishing of drywall for walls and ceilings.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">04</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="4" x2="4" y2="20"/><line x1="8" y1="4" x2="8" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="16" y1="4" x2="16" y2="20"/><line x1="20" y1="4" x2="20" y2="20"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="2" y1="15" x2="22" y2="15"/></svg></div>
+      <div class="service-name" data-en="Fences" data-es="Cercas">Fences</div>
+      <p class="service-desc" data-en="New fence installation and repair. Wood, vinyl, and chain-link options." data-es="Instalación y reparación de cercas. Opciones de madera, vinilo y malla.">New fence installation and repair. Wood, vinyl, and chain-link options.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">05</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C12 2 6 8 6 13a6 6 0 0 0 12 0C18 8 12 2 12 2Z"/><path d="M9 16C9 17.5 10.3 19 12 19"/></svg></div>
+      <div class="service-name" data-en="Pressure Washing" data-es="Lavado a Presión">Pressure Washing</div>
+      <p class="service-desc" data-en="Deep cleaning for driveways, siding, decks, and all exterior surfaces." data-es="Limpieza profunda de entradas, paredes, terrazas y superficies exteriores.">Deep cleaning for driveways, siding, decks, and all exterior surfaces.</p>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">06</div>
+      <div class="service-icon-wrap"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><rect x="10" y="10" width="4" height="4"/></svg></div>
+      <div class="service-name" data-en="General Construction" data-es="Construcción General">General Construction</div>
+      <p class="service-desc" data-en="Full-service residential and commercial construction and renovation." data-es="Construcción y renovación residencial y comercial completa.">Full-service residential and commercial construction and renovation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="before-after-section" id="gallery">
+  <div class="ba-center reveal">
+    <div class="section-tag" data-en="Our Work" data-es="Nuestro Trabajo">Our Work</div>
+    <h2 class="section-title" data-en="BEFORE & AFTER" data-es="ANTES Y DESPUÉS">BEFORE & AFTER</h2>
+    <p style="color:var(--muted);margin-top:0.5rem;font-size:0.88rem" data-en="Drag the slider to see the transformation" data-es="Arrastra el control para ver la transformación">Drag the slider to see the transformation</p>
+  </div>
+  <div class="ba-container" id="baContainer">
+    <div class="ba-img-after"><div class="ba-placeholder-text" data-en="AFTER" data-es="DESPUÉS">AFTER</div></div>
+    <div class="ba-before-wrap" id="baWrap" style="width:50%">
+      <div class="ba-img-before"><div class="ba-placeholder-text" data-en="BEFORE" data-es="ANTES">BEFORE</div></div>
+    </div>
+    <div class="ba-handle" id="baHandle" style="left:50%"></div>
+    <div class="ba-label ba-label-before" data-en="BEFORE" data-es="ANTES">BEFORE</div>
+    <div class="ba-label ba-label-after" data-en="AFTER" data-es="DESPUÉS">AFTER</div>
+  </div>
+</section>
+
+<section class="area-section" id="area">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag" data-en="Where We Work" data-es="Dónde Trabajamos">Where We Work</div>
+      <h2 class="section-title" data-en="SERVING GREATER MEMPHIS" data-es="SIRVIENDO GRAN MEMPHIS">SERVING GREATER MEMPHIS</h2>
+    </div>
+  </div>
+  <div class="area-grid">
+    <div class="area-card reveal reveal-delay-1"><div class="area-city area-primary">MEMPHIS</div><div class="area-state" data-en="TN · PRIMARY AREA" data-es="TN · ÁREA PRINCIPAL">TN · PRIMARY AREA</div></div>
+    <div class="area-card reveal reveal-delay-2"><div class="area-city">BARTLETT</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-3"><div class="area-city">GERMANTOWN</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-4"><div class="area-city">COLLIERVILLE</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-1"><div class="area-city">CORDOVA</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-2"><div class="area-city">LAKELAND</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-3"><div class="area-city">MILLINGTON</div><div class="area-state">TN</div></div>
+    <div class="area-card reveal reveal-delay-4"><div class="area-city">HORN LAKE</div><div class="area-state">MS</div></div>
+  </div>
+  <p class="area-note" data-en="Don't see your city? Call us — we likely serve your area." data-es="¿No ve su ciudad? Llámenos — probablemente servimos su área.">Don't see your city? Call us — we likely serve your area.</p>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag" data-en="What Clients Say" data-es="Lo Que Dicen Los Clientes">What Clients Say</div>
+      <h2 class="section-title" data-en="5-STAR REVIEWS" data-es="RESEÑAS DE 5 ESTRELLAS">5-STAR REVIEWS</h2>
+    </div>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal reveal-delay-1">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text" data-en='"Antonio and his crew did an amazing job on our fence and painting. Clean work, on time, and very professional. Highly recommend!"' data-es='"Antonio y su equipo hicieron un trabajo increíble. Trabajo limpio, puntual y muy profesional. ¡Muy recomendado!"'>"Antonio and his crew did an amazing job on our fence and painting. Clean work, on time, and very professional. Highly recommend!"</p>
+      <div class="review-author">— Maria G., Memphis TN</div>
+    </div>
+    <div class="review-card reveal reveal-delay-2">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text" data-en='"Best contractor in Memphis hands down. Fixed our sheetrock and repainted the whole interior. Looks brand new. Fair price too."' data-es='"El mejor contratista en Memphis. Arregló nuestro sheetrock y repintó todo el interior. Parece nuevo."'>"Best contractor in Memphis hands down. Fixed our sheetrock and repainted the whole interior. Looks brand new. Fair price too."</p>
+      <div class="review-author">— James T., Bartlett TN</div>
+    </div>
+    <div class="review-card reveal reveal-delay-3">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text" data-en='"Called for a free estimate and they showed up the next day. Pressure washed the whole house and installed a new fence. Great experience!"' data-es='"Llamé para un estimado y aparecieron al día siguiente. ¡Gran experiencia!"'>"Called for a free estimate and they showed up the next day. Pressure washed the whole house and installed a new fence. Great experience!"</p>
+      <div class="review-author">— Robert K., Germantown TN</div>
+    </div>
+  </div>
+  <div class="review-cta">
+    <a href="https://maps.google.com" target="_blank" class="btn-outline-red" data-en="★ See All Reviews on Google" data-es="★ Ver Todas Las Reseñas en Google">★ See All Reviews on Google</a>
+  </div>
+</section>
+
+<section class="estimate-section" id="estimate">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-tag" data-en="No Obligation" data-es="Sin Compromiso">No Obligation</div>
+      <h2 class="section-title" data-en="GET A FREE ESTIMATE" data-es="OBTENGA UN ESTIMADO GRATIS">GET A FREE ESTIMATE</h2>
+    </div>
+  </div>
+  <div class="estimate-grid">
+    <div class="estimate-info reveal-left">
+      <p data-en="Tell us about your project and we'll get back to you within 24 hours with a transparent, no-obligation estimate." data-es="Cuéntenos sobre su proyecto y le responderemos en 24 horas con un estimado transparente y sin compromiso.">Tell us about your project and we'll get back to you within 24 hours with a transparent, no-obligation estimate.</p>
+      <div class="estimate-feature"><div class="ef-dot"></div><span data-en="100% Free — No commitment required" data-es="100% Gratis — Sin compromiso">100% Free — No commitment required</span></div>
+      <div class="estimate-feature"><div class="ef-dot"></div><span data-en="Response within 24 hours" data-es="Respuesta en 24 horas">Response within 24 hours</span></div>
+      <div class="estimate-feature"><div class="ef-dot"></div><span>Call: (901) 314-0652</span></div>
+      <div class="estimate-feature"><div class="ef-dot"></div><span data-en="WhatsApp available" data-es="WhatsApp disponible">WhatsApp available</span></div>
+      <div class="estimate-feature"><div class="ef-dot"></div><span>Se habla Español</span></div>
+    </div>
+    <form class="estimate-form reveal-right" onsubmit="submitForm(event)">
+      <div class="form-row">
+        <div class="form-group"><label data-en="Your Name" data-es="Su Nombre">Your Name</label><input type="text" placeholder="John Smith" required></div>
+        <div class="form-group"><label data-en="Phone Number" data-es="Teléfono">Phone Number</label><input type="tel" placeholder="(901) 000-0000" required></div>
+      </div>
+      <div class="form-group">
+        <label data-en="Service Needed" data-es="Servicio Necesitado">Service Needed</label>
+        <select required>
+          <option value="">Select a service...</option>
+          <option>Carpentry</option><option>Painting</option><option>Sheetrock</option>
+          <option>Fences</option><option>Pressure Washing</option><option>General Construction</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label data-en="Tell us more (optional)" data-es="Cuéntenos más (opcional)">Tell us more (optional)</label><textarea placeholder="Describe your project..."></textarea></div>
+      <button type="submit" class="btn-submit" data-en="SEND REQUEST →" data-es="ENVIAR SOLICITUD →">SEND REQUEST →</button>
+      <div class="form-success" id="formSuccess">✓ Thank you! We'll be in touch within 24 hours.</div>
+    </form>
+  </div>
+</section>
+
+<section class="why" id="about">
+  <div class="reveal-left">
+    <div class="section-tag" data-en="Why Choose Us" data-es="Por Qué Elegirnos">Why Choose Us</div>
+    <h2 class="section-title">VELASQUEZ CONSTRUCTION</h2>
+    <ul class="why-list">
+      <li class="why-item">
+        <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg></div>
+        <div class="why-text"><h4 data-en="Licensed & Insured" data-es="Licenciado y Asegurado">Licensed & Insured</h4><p data-en="Full licensing and insurance for your complete peace of mind." data-es="Licencia y seguro completo para su tranquilidad.">Full licensing and insurance for your complete peace of mind.</p></div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div>
+        <div class="why-text"><h4 data-en="Interior & Exterior" data-es="Interior y Exterior">Interior & Exterior</h4><p data-en="One contractor handles everything inside and out." data-es="Un contratista maneja todo por dentro y por fuera.">One contractor handles everything inside and out.</p></div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="why-text"><h4 data-en="Free Estimates" data-es="Estimados Gratis">Free Estimates</h4><p data-en="No commitment required. Detailed estimate before work begins." data-es="Sin compromiso. Estimado detallado antes de comenzar.">No commitment required. Detailed estimate before work begins.</p></div>
+      </li>
+      <li class="why-item">
+        <div class="why-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div class="why-text"><h4 data-en="Local Memphis Contractor" data-es="Contratista Local de Memphis">Local Memphis Contractor</h4><p data-en="Proudly serving Memphis and surrounding communities." data-es="Sirviendo con orgullo a Memphis y comunidades cercanas.">Proudly serving Memphis and surrounding communities.</p></div>
+      </li>
+    </ul>
+  </div>
+  <div class="why-right reveal-right">
+    <div class="big-quote">"</div>
+    <p class="testimonial-text" data-en='"We take pride in every nail, every coat of paint, every fence post. When we leave your property, it looks better than the day we arrived — that\'s our promise."' data-es='"Nos enorgullecemos de cada clavo, cada capa de pintura, cada poste de cerca. Cuando salimos, su propiedad se ve mejor — esa es nuestra promesa."'>"We take pride in every nail, every coat of paint, every fence post. When we leave your property, it looks better than the day we arrived — that's our promise."</p>
+    <div class="testimonial-author">— Antonio Velasquez, Owner</div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="reveal-left">
+    <div class="section-tag" data-en="Get In Touch" data-es="Contáctanos">Get In Touch</div>
+    <h2 class="section-title" data-en="CONTACT US" data-es="CONTÁCTENOS">CONTACT US</h2>
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.93 1.18 2 2 0 012.92 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><span class="contact-label" data-en="Phone" data-es="Teléfono">Phone</span><div class="contact-value"><a href="tel:9013140652">(901) 314-0652</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div><span class="contact-label" data-en="Email" data-es="Correo">Email</span><div class="contact-value"><a href="mailto:velasquezconstruction0652@gmail.com">velasquezconstruction0652@gmail.com</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div><span class="contact-label">WhatsApp</span><div class="contact-value"><a href="https://wa.me/19013140652" target="_blank" data-en="Message us on WhatsApp" data-es="Escríbenos por WhatsApp">Message us on WhatsApp</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
+        <div><span class="contact-label">Facebook</span><div class="contact-value"><a href="https://www.facebook.com/velasquez.constructions/" target="_blank">Velasquez Constructions</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div><span class="contact-label" data-en="Service Area" data-es="Área de Servicio">Service Area</span><div class="contact-value" data-en="Memphis, TN & Surrounding Areas" data-es="Memphis, TN y Áreas Cercanas">Memphis, TN & Surrounding Areas</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal-right">
+    <div style="overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.1);margin-bottom:1.5rem;">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d209121.14824196518!2d-90.17974!3d35.1495343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87d57e1b77a78277%3A0x98f4c953a3742db7!2sMemphis%2C%20TN!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" width="100%" height="240" style="border:0;display:block;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <div class="cta-box">
+      <h3 data-en="CALL FOR FREE ESTIMATE" data-es="LLAME PARA ESTIMADO GRATIS">CALL FOR FREE ESTIMATE</h3>
+      <p data-en="No commitment required. We respond within 24 hours." data-es="Sin compromiso. Respondemos en 24 horas.">No commitment required. We respond within 24 hours.</p>
+      <a href="tel:9013140652">(901) 314-0652</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">VELASQUEZ <span>CONSTRUCTION</span></div>
+  <div class="footer-links">
+    <a href="#services" data-en="Services" data-es="Servicios">Services</a>
+    <a href="#reviews" data-en="Reviews" data-es="Reseñas">Reviews</a>
+    <a href="#estimate" data-en="Free Estimate" data-es="Estimado Gratis">Free Estimate</a>
+    <a href="https://www.facebook.com/velasquez.constructions/" target="_blank">Facebook</a>
+    <a href="https://wa.me/19013140652" target="_blank">WhatsApp</a>
+  </div>
+  <div>© 2025 Velasquez Construction · Memphis, TN</div>
+</footer>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<a href="tel:9013140652" class="floating-call" title="Call Now">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.93 1.18 2 2 0 012.92 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+</a>
+<a href="https://wa.me/19013140652" target="_blank" class="floating-wa" title="WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+function setLang(lang) {
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const t = el.getAttribute('data-' + lang);
+    if(t) el.innerHTML = t;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]').classList.add('active');
+  document.documentElement.lang = lang;
+}
+
+const baContainer = document.getElementById('baContainer');
+const baWrap = document.getElementById('baWrap');
+const baHandle = document.getElementById('baHandle');
+let dragging = false;
+function setPos(x) {
+  const r = baContainer.getBoundingClientRect();
+  let p = Math.min(Math.max((x - r.left) / r.width * 100, 5), 95);
+  baWrap.style.width = p + '%';
+  baHandle.style.left = p + '%';
+}
+baHandle.addEventListener('mousedown', () => dragging = true);
+baHandle.addEventListener('touchstart', () => dragging = true, {passive:true});
+document.addEventListener('mouseup', () => dragging = false);
+document.addEventListener('touchend', () => dragging = false);
+document.addEventListener('mousemove', e => { if(dragging) setPos(e.clientX); });
+document.addEventListener('touchmove', e => { if(dragging) setPos(e.touches[0].clientX); }, {passive:true});
+baContainer.addEventListener('click', e => setPos(e.clientX));
+
+function submitForm(e) {
+  e.preventDefault();
+  document.getElementById('formSuccess').style.display = 'block';
+  e.target.reset();
+  setTimeout(() => document.getElementById('formSuccess').style.display = 'none', 5000);
+}
+
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, { threshold:0.1 });
+revealEls.forEach(el => ro.observe(el));
+
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.querySelectorAll('.stat-num').forEach(n => {
+        const t = n.textContent.trim();
+        if(t === '100%') { let i=0; const s=setInterval(()=>{ i=Math.min(i+2,100); n.textContent=i+'%'; if(i>=100)clearInterval(s); },16); }
+        else if(t === '901') { let i=800; const s=setInterval(()=>{ i=Math.min(i+3,901); n.textContent=i; if(i>=901)clearInterval(s); },16); }
+      });
+      statsObs.unobserve(e.target);
+    }
+  });
+}, { threshold:0.3 });
+const statsEl = document.querySelector('.stats');
+if(statsEl) statsObs.observe(statsEl);
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a[href^="#"]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  navLinks.forEach(l => { l.classList.remove('active-link'); if(l.getAttribute('href')==='#'+cur) l.classList.add('active-link'); });
+  const bt = document.getElementById('backTop');
+  window.scrollY > 400 ? bt.classList.add('show') : bt.classList.remove('show');
+}, {passive:true});
+</script>
+</body>
+</html>
